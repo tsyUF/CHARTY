@@ -1,0 +1,66 @@
+import requests
+from PIL import Image
+import os
+
+# List of image URLs
+image_urls = [
+#5/16-5/2
+    "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F87c8555d-a5c8-4244-8778-f5ad5b37e737_700x312.png"
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F7f30a73f-bfa6-4584-b060-e6ffd561807e_700x312.png"
+    , "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa298e488-4c84-4ca3-861b-a62c33b83ed8_700x312.png"
+#4/26-45
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fbc87ca6f-f092-4336-97a8-a51d12480d39_700x312.png"
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F2eb9e63b-2be1-4746-8c6c-271b1bfa5270_700x312.png"
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fd3da59f3-36e4-495f-9154-ff0d70baa0aa_700x312.png"
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa3faea43-8251-4735-9bd9-1800ec4fc1e4_700x312.png"
+#3/28-3/7
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcde20da7-b44a-4414-a214-675361493c6f_700x312.png"
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F30762d38-91be-423a-8924-29e78620446a_700x312.png"
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F7c64dbd8-599e-4647-992c-b2266b044e1c_700x312.png"
+# NO 3/7
+##2/28-2/1
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F3f2fbee4-361a-422b-a5db-38222abd0d34_700x312.png"         
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F30762d38-91be-423a-8924-29e78620446a_700x312.png"
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F7c64dbd8-599e-4647-992c-b2266b044e1c_700x312.png"
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F0a2043c3-faba-4870-8389-4c13f3032e73_700x312.png"
+      #1/25
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F5590715a-eba2-41d2-8358-90f9d45638e2_700x312.png"
+    # NO 1/18
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fcff2204f-844a-404a-bc9a-1e6badc5a75c_700x312.png"
+    ,"https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F97b426ba-da80-4fbe-bf01-14fc9c1e73e5_700x312.png"
+
+  # START 2025
+]
+
+# Output folder
+output_folder = "djia_images"
+os.makedirs(output_folder, exist_ok=True)
+
+# Download images
+image_files = []
+for idx, url in enumerate(image_urls, start=1):
+    filename = os.path.join(output_folder, f"chart_{idx:02d}.png")
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(filename, 'wb') as f:
+            f.write(response.content)
+        print(f"Downloaded: {filename}")
+        image_files.append(filename)
+    else:
+        print(f"Failed to download: {url}")
+
+# Create animated GIF
+if image_files:
+    images = [Image.open(img).convert("RGB") for img in image_files]
+    gif_path = os.path.join(output_folder, "djia_animation.gif")
+    images[0].save(
+        gif_path,
+        save_all=True,
+        append_images=images[1:],
+        duration=500,  # ms per frame
+        loop=0
+         )
+    print(f"\nAnimated GIF saved as: {gif_path}")
+
+
+     
